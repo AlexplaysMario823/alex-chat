@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function run(e) {
+            e.preventDefault()
+            const input = document.getElementById("input")
+            console.log(input.value)
+            input.value="" 
+
+        }
+    </script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            background-color: black;
+        }
+        .chat-container {
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .messages-container {
+            background-color: green;
+            flex-grow: 1;
+        }
+
+        #input {
+            width: 100%;
+            padding: 8px 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="messages-container">
+
+        </div>
+        <form action="" onsubmit="run(event)">
+            <input type="text" id="input">
+        </form>
+    </div>
+        
+    
+</body>
+</html>
