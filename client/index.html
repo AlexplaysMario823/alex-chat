@@ -6,47 +6,72 @@
     <title>Document</title>
     <script src="./privateStuff.js"></script>
     <script>
-        function sendMessage(e) {
-            e.preventDefault()
-            const input = document.getElementById("input")
-            const value = input.value
-            input.value="" 
-
-            fetch(`http://${serverAddress}/messages`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    from: 'Alex',
-                    to: 'Saief',
-                    content: value
-                })
-            }).then(() => {
-                updateMessages()            
-            })
+        function handleUserName() {
+            const username = document.getElementById("usernameInput")
+            getIntoChat(username.value)
         }
+        function getIntoChat(username) {
+            
 
-        function updateMessages() {
-            fetch(`http://${serverAddress}/messages`, {
-                method: 'GET',
-            }).then(response => {
-                return response.json()
-            }).then(json => {
-                const container = document.querySelector('.messages-container')
-                container.innerHTML = ''
-                json.messages.forEach(message => {
-                    const newMessage = document.createElement('div');
-                    newMessage.className = 'message'
-                    newMessage.innerText = `${message.from} : ${message.content}`
-                    container.appendChild(newMessage)
-                })
-            })
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
             setInterval(updateMessages, 10)
-        })
+     
+            getCSS()
+            function getCSS() {
+                document.body.innerHTML = ''
+                const chatContainer = document.createElement('div')
+                chatContainer.className = 'chat-container'
+                const messageContainer = document.createElement('div')
+                messageContainer.className = 'messages-container'
+                const form = document.createElement('form')
+                form.addEventListener('submit', () => {
+                    sendMessage(event)
+                })
+                const input = document.createElement("input")
+                input.id = 'input'
+                form.appendChild(input)
+                chatContainer.appendChild(messageContainer)
+                chatContainer.appendChild(form)
+                document.body.appendChild(chatContainer)
+            }
+            function sendMessage(e) {
+                e.preventDefault()
+                const input = document.getElementById("input")
+                const value = input.value
+                input.value="" 
+
+                fetch(`http://${serverAddress}/messages`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        from: username,
+                        to: 'Saief',
+                        content: value
+                    })
+                }).then(() => {
+                    updateMessages()            
+                })
+            }
+
+            function updateMessages() {
+                fetch(`http://${serverAddress}/messages`, {
+                    method: 'GET',
+                }).then(response => {
+                    return response.json()
+                }).then(json => {
+                    const container = document.querySelector('.messages-container')
+                    container.innerHTML = ''
+                    json.messages.forEach(message => {
+                        const newMessage = document.createElement('div');
+                        newMessage.className = 'message'
+                        newMessage.innerText = `${message.from} : ${message.content}`
+                        container.appendChild(newMessage)
+                    })
+                })
+            }
+
+        }
     </script>
     <style>
         * {
@@ -81,13 +106,12 @@
     </style>
 </head>
 <body>
-    <div class="chat-container">
-        <div class="messages-container">
-        </div>
-        <form action="" onsubmit="sendMessage(event)">
-            <input type="text" id="input">
-        </form>
-    </div>
+    <h1>Username</h1>
+    <input type="text" name="" id="usernameInput" >
+    <button onclick="handleUserName()">Click</button>
+    
+    
+    
         
     
 </body>
