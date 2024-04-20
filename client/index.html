@@ -38,7 +38,7 @@
                 json.messages.forEach(message => {
                     const newMessage = document.createElement('div');
                     newMessage.className = 'message'
-                    newMessage.innerText = message.content
+                    newMessage.innerText = `${message.from} : ${message.content}`
                     container.appendChild(newMessage)
                 })
             })
