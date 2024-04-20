@@ -5,12 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script>
+        const l = []
         function run(e) {
             e.preventDefault()
             const input = document.getElementById("input")
-            console.log(input.value)
+            const value = input.value
             input.value="" 
 
+            fetch('http://localhost:3000/messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    from: 'Alex',
+                    to: 'Saief',
+                    content: value
+                })
+            }).then(() => {
+                fetch('http://localhost:3000/messages', {
+                    method: 'GET',
+                }).then(response => {
+                    return response.json()
+                }).then(json => {
+                    
+                    const container = document.querySelector('.messages-container')
+                    container.innerHTML = ''
+                    json.messages.forEach(message => {
+                        const newMessage = document.createElement('div');
+                        newMessage.className = 'message'
+                        newMessage.innerText = message.content
+                        container.appendChild(newMessage)
+                    })
+                })
+            })
         }
     </script>
     <style>
@@ -27,6 +55,12 @@
             flex-direction: column;
             min-height: 100vh;
         }
+        
+        .message {
+            padding: 20px;
+            background-color: white;
+            margin-bottom: 8px;
+        }
 
         .messages-container {
             background-color: green;
@@ -42,7 +76,6 @@
 <body>
     <div class="chat-container">
         <div class="messages-container">
-
         </div>
         <form action="" onsubmit="run(event)">
             <input type="text" id="input">

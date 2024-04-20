@@ -5,6 +5,8 @@ const app = express();
 
 app.use(cors())
 
+app.use(express.json())
+
 app.get('/', (req, res) => {
     res.send('Hello world. This is my first express endpoint.')
 })
@@ -13,26 +15,30 @@ app.get('/alex', (req, res) => {
     res.send('Alex Mizzi was here.')
 })
 
+const messages = [];
+
+function addMessage(from, to, content) {
+    messages.push({
+        from: from,
+        to: to,
+        content: content
+    })
+}
+
+addMessage('Alex', 'Saief', 'Hello Saief')
+
+console.log(messages);
+
 app.get('/messages', (req, res) => {
     res.json({
-        messages: [
-            {
-                from: 'Alex',
-                to: 'Saief',
-                content: 'Message one',
-            },
-            {
-                from: 'Saief',
-                to: 'Alex',
-                content: 'Hi Alex!',
-            },
-            {
-                from: 'Alex',
-                to: 'Saief',
-                content: 'How are you?',
-            }
-        ]
+        messages: messages
     })
+})
+
+app.post('/messages', (req, res) => {
+    addMessage(req.body.from, req.body.to, req.body.content) 
+    console.log(messages)
+    res.send();
 })
 
 app.listen(3000, () => {
