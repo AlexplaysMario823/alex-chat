@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="./privateStuff.js"></script>
     <script>
-        const l = []
-        function run(e) {
+        function sendMessage(e) {
             e.preventDefault()
             const input = document.getElementById("input")
             const value = input.value
             input.value="" 
 
-            fetch('http://localhost:3000/messages', {
+            fetch(`http://${serverAddress}/messages`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -23,23 +23,30 @@
                     content: value
                 })
             }).then(() => {
-                fetch('http://localhost:3000/messages', {
-                    method: 'GET',
-                }).then(response => {
-                    return response.json()
-                }).then(json => {
-                    
-                    const container = document.querySelector('.messages-container')
-                    container.innerHTML = ''
-                    json.messages.forEach(message => {
-                        const newMessage = document.createElement('div');
-                        newMessage.className = 'message'
-                        newMessage.innerText = message.content
-                        container.appendChild(newMessage)
-                    })
+                updateMessages()            
+            })
+        }
+
+        function updateMessages() {
+            fetch(`http://${serverAddress}/messages`, {
+                method: 'GET',
+            }).then(response => {
+                return response.json()
+            }).then(json => {
+                const container = document.querySelector('.messages-container')
+                container.innerHTML = ''
+                json.messages.forEach(message => {
+                    const newMessage = document.createElement('div');
+                    newMessage.className = 'message'
+                    newMessage.innerText = message.content
+                    container.appendChild(newMessage)
                 })
             })
         }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            setInterval(updateMessages, 10)
+        })
     </script>
     <style>
         * {
@@ -77,7 +84,7 @@
     <div class="chat-container">
         <div class="messages-container">
         </div>
-        <form action="" onsubmit="run(event)">
+        <form action="" onsubmit="sendMessage(event)">
             <input type="text" id="input">
         </form>
     </div>
